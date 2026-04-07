@@ -1,10 +1,8 @@
 public class DreamEntry
 {
     public int Id { get; set; }
-    public int SurveySessionId { get; set; } // foreign key to associate with a specific survey session
+    public DateOnly Date { get; set; } // The date of the dream entry, used for searching and organizing entries by date
     public string? Content { get; set; } // The actual dream content entered by the user
     public bool IsLucid { get; set; } // Indicates whether the dream was lucid or not
-    
-    //navigation properties
-    public SurveySession? SurveySession { get; set; }
+
 }

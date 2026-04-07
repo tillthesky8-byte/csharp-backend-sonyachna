@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace SONYACHNA.database.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260407160341_Inital")]
+    partial class Inital
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.5");
@@ -52,13 +55,15 @@ namespace SONYACHNA.database.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("TEXT");
-
                     b.Property<bool>("IsLucid")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("SurveySessionId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("SurveySessionId");
 
                     b.ToTable("DreamEntries");
                 });
@@ -148,6 +153,17 @@ namespace SONYACHNA.database.Migrations
                     b.Navigation("SurveySession");
                 });
 
+            modelBuilder.Entity("DreamEntry", b =>
+                {
+                    b.HasOne("SurveySession", "SurveySession")
+                        .WithMany("DreamEntries")
+                        .HasForeignKey("SurveySessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SurveySession");
+                });
+
             modelBuilder.Entity("Question", b =>
                 {
                     b.Navigation("Answers");
@@ -156,6 +172,8 @@ namespace SONYACHNA.database.Migrations
             modelBuilder.Entity("SurveySession", b =>
                 {
                     b.Navigation("Answers");
+
+                    b.Navigation("DreamEntries");
                 });
 #pragma warning restore 612, 618
         }

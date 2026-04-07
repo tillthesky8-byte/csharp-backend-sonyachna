@@ -6,6 +6,5 @@ public class SurveySession
     
     //navigation properties
     public List<Answer>? Answers { get; set; }
-    public List<DreamEntry>? DreamEntries { get; set; }
 
 }

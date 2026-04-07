@@ -24,7 +24,7 @@ public class DreamService
             }
 
             var entries = allEntriesResponse.Data;
-            var filteredEntries = entries!.Where(e => e.SurveySession != null && e.SurveySession.Date == date).ToList();
+            var filteredEntries = entries!.Where(e => e.Date == date).ToList();
             logger.LogInformation($"Retrieved {filteredEntries.Count} dream entries for date {date}");
             return filteredEntries;
         }

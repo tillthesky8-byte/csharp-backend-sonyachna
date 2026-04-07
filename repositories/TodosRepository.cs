@@ -43,6 +43,8 @@ public class TododsRepository : IRepository<Todo>
     {
         try
         {
+            entity.CreatedAt = DateTime.UtcNow;
+            entity.Status = TodoStatus.InProgress;
             db.Todos.Add(entity);
             db.SaveChanges();
             logger.LogInformation($"Todo with id = {entity.Id} was added to the database");
