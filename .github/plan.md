@@ -170,8 +170,8 @@ First build would have 3 main modules:
 			- Scope
 			- DueDate
 		Response must contain:
-			- TodoId
-			- CreationDate
+			- Success (boolean)
+			- Message (success or error message)
 	
 	2. For **gettingall** todos, response must contain:
 		- List of todos (each with id, description, status, scope, creation date, due date)
