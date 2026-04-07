@@ -8,7 +8,7 @@ namespace DTOs
 
     public class CreateSurveyResponse
     {
-        public int SurveySessionId { get; set; }
-        public DateOnly Date { get; set; }
+        public bool Success { get; set; }
+        public string? Message { get; set; }
     }
 }

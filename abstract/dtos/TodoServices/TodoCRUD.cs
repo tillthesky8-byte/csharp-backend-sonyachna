@@ -1,4 +1,4 @@
-namespace DTOS
+namespace DTOs
 {
     // post operation
     public class CreateTodoRequest
@@ -40,6 +40,7 @@ namespace DTOS
         public int TodoId { get; set; }
         public string? Description { get; set; }
         public TodoScope? Scope { get; set; }
+        public TodoStatus? Status { get; set; }
         public DateTime? DueAt { get; set; }
     }
 
