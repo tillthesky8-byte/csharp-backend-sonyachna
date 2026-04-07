@@ -1,0 +1,108 @@
+public class TododsRepository : IRepository<Todo>
+{
+    private readonly AppDbContext db;
+    private readonly ILogger<TododsRepository> logger;
+
+    public TododsRepository(AppDbContext db, ILogger<TododsRepository> logger)
+    {
+        this.db = db;
+        this.logger = logger;
+    }
+
+    public RespositoryResponse<Todo> GetById(int id)
+    {
+        try
+        {
+            var todo = db.Todos.FirstOrDefault(t => t.Id == id);
+            logger.LogInformation($"Todo with id = {id} was retrived from the database");
+            return new RespositoryResponse<Todo> { Success = true, Data = todo };
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, $"Error fetching todo with id {id}");
+            return new RespositoryResponse<Todo> { Success = false, Message = $"Error fetching todo with id {id}" };
+        }
+    }
+
+    public RespositoryResponse<List<Todo>> GetAll()
+    {
+        try
+        {
+            var todos = db.Todos.ToList();
+            logger.LogInformation($"All todos were retrived from the database; count: {todos.Count}");
+            return new RespositoryResponse<List<Todo>> { Success = true, Data = todos };
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error fetching all todos");
+            return new RespositoryResponse<List<Todo>> { Success = false, Message = "Error fetching all todos" };
+        }
+    }
+
+    public RespositoryResponse<Todo> Add(Todo entity)
+    {
+        try
+        {
+            db.Todos.Add(entity);
+            db.SaveChanges();
+            logger.LogInformation($"Todo with id = {entity.Id} was added to the database");
+            return new RespositoryResponse<Todo> { Success = true, Data = entity };
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error adding new todo");
+            return new RespositoryResponse<Todo> { Success = false, Message = "Error adding new todo" };
+        }
+    }
+
+    public RespositoryResponse<Todo> Update(Todo entity)
+    {
+        try
+        {
+            var existingTodo = db.Todos.FirstOrDefault(t => t.Id == entity.Id);
+            if (existingTodo == null)
+            {
+                logger.LogWarning($"Todo with id = {entity.Id} was not found for update");
+                return new RespositoryResponse<Todo> { Success = false, Message = $"Todo with id {entity.Id} not found" };
+            }
+
+            existingTodo.Description = entity.Description;
+            existingTodo.Status = entity.Status;
+            existingTodo.Status = entity.Status;
+            existingTodo.DueAt = entity.DueAt;
+            existingTodo.UpdatedAt = DateTime.UtcNow;
+            existingTodo.CompletedAt = entity.CompletedAt;
+
+            db.SaveChanges();
+            logger.LogInformation($"Todo with id = {entity.Id} was updated in the database");
+            return new RespositoryResponse<Todo> { Success = true, Data = existingTodo };
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, $"Error updating todo with id {entity.Id}");
+            return new RespositoryResponse<Todo> { Success = false, Message = $"Error updating todo with id {entity.Id}" };
+        }
+    }
+    public RespositoryResponse<Todo> Delete(int id)
+    {
+        try
+        {
+            var existingTodo = db.Todos.FirstOrDefault(t => t.Id == id);
+            if (existingTodo == null)
+            {
+                logger.LogWarning($"Todo with id = {id} was not found for deletion");
+                return new RespositoryResponse<Todo> { Success = false, Message = $"Todo with id {id} not found" };
+            }
+
+            db.Todos.Remove(existingTodo);
+            db.SaveChanges();
+            logger.LogInformation($"Todo with id = {id} was deleted from the database");
+            return new RespositoryResponse<Todo> { Success = true, Data = existingTodo };
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, $"Error deleting todo with id {id}");
+            return new RespositoryResponse<Todo> { Success = false, Message = $"Error deleting todo with id {id}" };
+        }
+    }
+}
