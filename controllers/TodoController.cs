@@ -24,11 +24,10 @@ public class TodosController : ControllerBase
         var repoResponse = repo.GetAll();
         if (repoResponse.Success)
         {
-            logger.LogInformation($"Successfully retrieved all todos; count: {repoResponse.Data!.Count}");
+            logger.LogInformation($"SENT; count: {repoResponse.Data!.Count}");
             return Ok(repoResponse.Data);
         }
-        logger.LogError("Failed to retrieve todos");
-        return BadRequest("Failed to retrieve todos");
+        return BadRequest("Request failed");
     }
     // curl -X GET http://localhost:5155/api/todos
     // Request for getting all todos available. 
@@ -37,7 +36,8 @@ public class TodosController : ControllerBase
     [HttpPost("")]
     public IActionResult AddTodo(CreateTodoRequest request)
     {
-        var newTodo = new Todo
+        // Find a way to handle creation in deeper layers.
+         var newTodo = new Todo
         {
             Description = request.Description,
             Scope = request.Scope,
@@ -45,9 +45,10 @@ public class TodosController : ControllerBase
             CreatedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
             Status = TodoStatus.InProgress
         };
+
         var repoResponse = repo.Add(newTodo);
         if (repoResponse.Success)        {
-            logger.LogInformation($"Todo with id = {repoResponse.Data!.Id} was successfully created");
+            logger.LogInformation($"CREATED; id: {repoResponse.Data!.Id}");
             return Ok(new CreateTodoResponse { Success = true, Message = "Todo created successfully"});
         }
         logger.LogError("Failed to create todo");
@@ -61,6 +62,7 @@ public class TodosController : ControllerBase
     [HttpPut("{id}")]
     public IActionResult UpdateTodo(int id, UpdateTodoRequest request)
     {
+        // Find a way to handle update in deeper layers.
         var updateTodo = new Todo
         {
             Id = id,
@@ -69,12 +71,13 @@ public class TodosController : ControllerBase
             Status = (TodoStatus)request.Status!,
             DueAt = request.DueAt,
         };
+        //--------------------------------------------------------------
+
         var repoResponse = repo.Update(updateTodo);
         if (repoResponse.Success)        {
-            logger.LogInformation($"Todo with id = {repoResponse.Data!.Id} was successfully updated");
+            logger.LogInformation($"UPDATED; id: {repoResponse.Data!.Id}");
             return Ok(new UpdateTodoResponse { Success = true, Message = "Todo updated successfully" });
         }
-        logger.LogError($"Failed to update todo with id = {id}");
         return BadRequest(new UpdateTodoResponse { Success = false, Message = $"Failed to update todo with id {id}" });
 
     }
@@ -89,10 +92,9 @@ public class TodosController : ControllerBase
         var serviceResponse = service.MarkTodoCompleted(id);
         if (serviceResponse.Success)       
         {
-            logger.LogInformation($"Todo with id = {id} was marked as completed");
+            logger.LogInformation($"PATCHED; id: {id} marked as completed");
             return Ok(new MarkTodoDoneResponse { Success = true, Message = "Todo marked as completed successfully" });
         }
-        logger.LogError($"Failed to mark todo with id = {id} as completed");
         return BadRequest(new MarkTodoDoneResponse { Success = false, Message = $"Failed to mark todo with id {id} as completed" });
     }
     // curl -X PATCH http://localhost:5155/api/todos/mark-completed/{id}
@@ -105,10 +107,9 @@ public class TodosController : ControllerBase
     {
         var serviceResponse = service.MarkTodoFailed(id);
         if (serviceResponse.Success)        {
-            logger.LogInformation($"Todo with id = {id} was marked as failed");
+            logger.LogInformation($"PATCHED; id: {id} marked as failed");
             return Ok(new MarkTodoFailedResponse { Success = true, Message = "Todo marked as failed successfully" });
         }
-        logger.LogError($"Failed to mark todo with id = {id} as failed");
         return BadRequest(new MarkTodoFailedResponse { Success = false, Message = $"Failed to mark todo with id {id} as failed" });
     }
     // curl -X PATCH http://localhost:5155/api/todos/mark-failed/{id}

@@ -24,14 +24,13 @@ public class DreamEntriesController : ControllerBase
     [HttpGet("")]
     public IActionResult GetAllDreamEntries()
     {
-        var response = repo.GetAll();
-        if (response.Success)
+        var repoResponse = repo.GetAll();
+        if (repoResponse.Success)
         {
-            logger.LogInformation($"Successfully retrieved all dream entries; count: {response.Data!.Count}");
-            return Ok(response.Data);
+            logger.LogInformation($"SENT; count: {repoResponse.Data!.Count}");
+            return Ok(repoResponse.Data);
         }
-        logger.LogError("Failed to retrieve dream entries");
-        return BadRequest("Failed to retrieve dream entries");
+        return BadRequest("Request failed");
     }
     // curl -X GET http://localhost:5155/api/dreamentries
     // Request for getting all dream entries available. 
@@ -41,20 +40,22 @@ public class DreamEntriesController : ControllerBase
     [HttpPost("")]
     public IActionResult AddDreamEntry(CreateDreamEntryRequest request)
     {
+        // Find a way to handle creaction in deeper layers.
         var newEntry = new DreamEntry
         {
             Content = request.Content,
             Date = DateOnly.FromDateTime(DateTime.UtcNow),
             IsLucid = request.IsLucid
         };
-        var response = repo.Add(newEntry);
-        if (response.Success)
+        //--------------------------------------------------------------
+
+        var repoResponse = repo.Add(newEntry);
+        if (repoResponse.Success)
         {
-            logger.LogInformation("Successfully created dream entry");
-            return Ok(response.Data);
+            logger.LogInformation($"CREATED; id: {repoResponse.Data!.Id}");
+            return Ok(repoResponse.Data);
         }
-        logger.LogError("Failed to create dream entry");
-        return BadRequest("Failed to create dream entry");
+        return BadRequest("Request failed");
     }
     // curl -X POST http://localhost:5155/api/dreamentries -H "Content-Type: application/json" -d '{"Content": "I had a dream about flying", "IsLucid": true}'
     // Request for adding a new dream entry.
@@ -64,20 +65,22 @@ public class DreamEntriesController : ControllerBase
     [HttpPut("{id}")]
     public IActionResult UpdateDreamEntry(int id, UpdateDreamEntryRequest request)
     {
+        //find a way to handle update in deeper layers.
         var updateEntry = new DreamEntry
         {
             Id = id,
             Content = request.Content,
             IsLucid = request.IsLucid
         };
-        var response = repo.Update(updateEntry);
-        if (response.Success)
+        //--------------------------------------------------------------
+
+        var repoResponse = repo.Update(updateEntry);
+        if (repoResponse.Success)
         {
-            logger.LogInformation($"Dream entry with id = {response.Data!.Id} was successfully updated");
-            return Ok(response.Data);
+            logger.LogInformation($"UPDATED; id: {repoResponse.Data!.Id}");
+            return Ok(repoResponse.Data);
         }
-        logger.LogError($"Failed to update dream entry with id = {id}");
-        return BadRequest("Failed to update dream entry");
+        return BadRequest("Request failed");
     }
     // curl -X PUT http://localhost:5155/api/dreamentries/{id} -H "Content-Type: application/json" -d '{"Content": "I had a dream about flying over mountains", "IsLucid": false}'
     // Request for updating an existing dream entry.
@@ -89,11 +92,10 @@ public class DreamEntriesController : ControllerBase
         var serviceResponse = service.RetriveDreamEntriesByDate(date);
         if (serviceResponse.Success)
         {
-            logger.LogInformation($"Retrieved {serviceResponse.Data!.Count} dream entries for date {date}");
+            logger.LogInformation($"SENT; count: {serviceResponse.Data!.Count}");
             return Ok(serviceResponse.Data);
         }
-        logger.LogError("Failed to retrieve dream entries by date");
-        return BadRequest("Failed to retrieve dream entries by date");
+        return BadRequest("Request failed");
     }
     // curl -X GET "http://localhost:5155/api/dreamentries/{date}"
     // Request for retrieving dream entries by date.
@@ -104,11 +106,10 @@ public class DreamEntriesController : ControllerBase
         var response = repo.Delete(id);
         if (response.Success)
         {
-            logger.LogInformation($"Dream entry with id = {id} was successfully deleted");
+            logger.LogInformation($"DELETED; id: {id}");
             return Ok();
         }
-        logger.LogError($"Failed to delete dream entry with id = {id}");
-        return BadRequest("Failed to delete dream entry");
+        return BadRequest("Request failed");
     }
     // curl -X DELETE http://localhost:5155/api/dreamentries/{id}
     // Request for deleting a dream entry by id.

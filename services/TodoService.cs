@@ -41,7 +41,7 @@ public class TodoService
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, $"Error marking todo with id {todoId} as completed");
+            logger.LogError(ex, $"ERROR AT SERVICE: Error marking todo with id {todoId} as completed");
             return new InternalResponse<bool> { Success = false, Message = "Error marking todo as completed" };
         }
 
@@ -77,7 +77,7 @@ public class TodoService
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, $"Error marking todo with id {todoId} as failed");
+            logger.LogError(ex, $"ERROR AT SERVICE: Error marking todo with id {todoId} as failed");
             return new InternalResponse<bool> { Success = false, Message = "Error marking todo as failed" };
         }
     }

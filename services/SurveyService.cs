@@ -4,10 +4,7 @@ public class SurveyService
     private readonly AppDbContext db;
     private readonly ILogger<SurveyService> logger;
 
-    public SurveyService(
-        IRepository<SurveySession> repo,
-        AppDbContext db,
-        ILogger<SurveyService> logger)
+    public SurveyService(IRepository<SurveySession> repo, AppDbContext db, ILogger<SurveyService> logger)
     {
         this.repo = repo;
         this.db = db;
@@ -21,7 +18,6 @@ public class SurveyService
             var repoResponse = repo.GetAll();
             if (!repoResponse.Success)
             {
-                logger.LogError("Failed to retrieve survey sessions: {Message}", repoResponse.Message);
                 return new InternalResponse<bool> { Success = false };
             }
 
@@ -32,7 +28,7 @@ public class SurveyService
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error checking survey session existence for date");
+            logger.LogError(ex, "ERROR AT SERVICE: Error checking survey session existence for date");
             return new InternalResponse<bool> { Success = false };
         }
     }
@@ -49,7 +45,6 @@ public class SurveyService
             });
             if (!repoResponse.Success)
             {
-                logger.LogError("Failed to create survey session: {Message}", repoResponse.Message);
                 return new InternalResponse { Success = false };
             }
             var session = repoResponse.Data;
@@ -71,7 +66,7 @@ public class SurveyService
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "An error occurred while submitting the survey");
+            logger.LogError(ex, "ERROR AT SERVICE: An error occurred while submitting the survey");
             return new InternalResponse { Success = false };
         }
 

@@ -20,8 +20,8 @@ public class AnswerRepository : IRepository<Answer>
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error fetching all answers");
-            return new InternalResponse<List<Answer>> { Success = false, Message = "Error fetching all answers" };
+            logger.LogError(ex, "ERROR AT REPOSITORY: Error fetching all answers");
+            return new InternalResponse<List<Answer>> { Success = false, Message = "Error fetching all answers", Data = null };
         }   
     }
 
@@ -35,8 +35,8 @@ public class AnswerRepository : IRepository<Answer>
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, $"Error fetching answer with id {id}");
-            return new InternalResponse<Answer> { Success = false, Message = $"Error fetching answer with id {id}" };
+            logger.LogError(ex, $"ERROR AT REPOSITORY: Error fetching answer with id {id}");
+            return new InternalResponse<Answer> { Success = false, Message = $"Error fetching answer with id {id}", Data = null };
         }
     }
 
@@ -51,8 +51,8 @@ public class AnswerRepository : IRepository<Answer>
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error adding new answer");
-            return new InternalResponse<Answer> { Success = false, Message = "Error adding new answer" };
+            logger.LogError(ex, "ERROR AT REPOSITORY: Error adding new answer");
+            return new InternalResponse<Answer> { Success = false, Message = "Error adding new answer", Data = null };
         }
     }
 
@@ -76,8 +76,8 @@ public class AnswerRepository : IRepository<Answer>
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, $"Error updating answer with id {entity.Id}");
-            return new InternalResponse<Answer> { Success = false, Message = $"Error updating answer with id {entity.Id}" };
+            logger.LogError(ex, $"ERROR AT REPOSITORY: Error updating answer with id {entity.Id}");
+            return new InternalResponse<Answer> { Success = false, Message = $"Error updating answer with id {entity.Id}", Data = null };
         }
     }
 
@@ -98,8 +98,8 @@ public class AnswerRepository : IRepository<Answer>
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, $"Error deleting answer with id {id}");
-            return new InternalResponse<Answer> { Success = false, Message = $"Error deleting answer with id {id}" };
+            logger.LogError(ex, $"ERROR AT REPOSITORY: Error deleting answer with id {id}");
+            return new InternalResponse<Answer> { Success = false, Message = $"Error deleting answer with id {id}", Data = null };
         }
     }
 }

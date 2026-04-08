@@ -3,9 +3,7 @@ public class DreamService
     private readonly IRepository<DreamEntry> dreamEntryRepository;
     private readonly ILogger<DreamService> logger;
 
-    public DreamService(
-        IRepository<DreamEntry> dreamEntryRepository,
-        ILogger<DreamService> logger)
+    public DreamService(IRepository<DreamEntry> dreamEntryRepository,ILogger<DreamService> logger)
     {
 
         this.dreamEntryRepository = dreamEntryRepository;
@@ -16,21 +14,19 @@ public class DreamService
     {
         try
         {
-            var allEntriesResponse = dreamEntryRepository.GetAll();
-            if (!allEntriesResponse.Success)
+            var repoResponse = dreamEntryRepository.GetAll();
+            if (!repoResponse.Success)
             {
-                logger.LogError("Failed to retrieve dream entries: {Message}", allEntriesResponse.Message);
                 return new InternalResponse<List<DreamEntry>> { Success = false };
             }
 
-            var entries = allEntriesResponse.Data;
+            var entries = repoResponse.Data;
             var filteredEntries = entries!.Where(e => e.Date == date).ToList();
-            logger.LogInformation($"Retrieved {filteredEntries.Count} dream entries for date {date}");
             return new InternalResponse<List<DreamEntry>> { Success = true, Data = filteredEntries };
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error retrieving dream entries by date");
+            logger.LogError(ex, "ERROR AT SERVICE: Error retrieving dream entries by date");
             return new InternalResponse<List<DreamEntry>> { Success = false };
         }
     }

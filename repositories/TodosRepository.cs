@@ -19,8 +19,8 @@ public class TododsRepository : IRepository<Todo>
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, $"Error fetching todo with id {id}");
-            return new InternalResponse<Todo> { Success = false, Message = $"Error fetching todo with id {id}" };
+            logger.LogError(ex, $"ERROR AT REPOSITORY: Error fetching todo with id {id}");
+            return new InternalResponse<Todo> { Success = false, Message = $"Error fetching todo with id {id}", Data = null };
         }
     }
 
@@ -34,8 +34,8 @@ public class TododsRepository : IRepository<Todo>
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error fetching all todos");
-            return new InternalResponse<List<Todo>> { Success = false, Message = "Error fetching all todos" };
+            logger.LogError(ex, "ERROR AT REPOSITORY: Error fetching all todos");
+            return new InternalResponse<List<Todo>> { Success = false, Message = "Error fetching all todos", Data = null };
         }
     }
 
@@ -50,8 +50,8 @@ public class TododsRepository : IRepository<Todo>
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error adding new todo");
-            return new InternalResponse<Todo> { Success = false, Message = "Error adding new todo" };
+            logger.LogError(ex, "ERROR AT REPOSITORY: Error adding new todo");
+            return new InternalResponse<Todo> { Success = false, Message = "Error adding new todo", Data = null };
         }
     }
 
@@ -63,7 +63,7 @@ public class TododsRepository : IRepository<Todo>
             if (existingTodo == null)
             {
                 logger.LogWarning($"Todo with id = {entity.Id} was not found for update");
-                return new InternalResponse<Todo> { Success = false, Message = $"Todo with id {entity.Id} not found" };
+                return new InternalResponse<Todo> { Success = false, Message = $"Todo with id {entity.Id} not found", Data = null };
             }
 
             existingTodo.Description = entity.Description;
@@ -79,8 +79,8 @@ public class TododsRepository : IRepository<Todo>
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, $"Error updating todo with id {entity.Id}");
-            return new InternalResponse<Todo> { Success = false, Message = $"Error updating todo with id {entity.Id}" };
+            logger.LogError(ex, $"ERROR AT REPOSITORY: Error updating todo with id {entity.Id}");
+            return new InternalResponse<Todo> { Success = false, Message = $"Error updating todo with id {entity.Id}", Data = null };
         }
     }
     public InternalResponse<Todo> Delete(int id)
@@ -91,18 +91,18 @@ public class TododsRepository : IRepository<Todo>
             if (existingTodo == null)
             {
                 logger.LogWarning($"Todo with id = {id} was not found for deletion");
-                return new InternalResponse<Todo> { Success = false, Message = $"Todo with id {id} not found" };
+                return new InternalResponse<Todo> { Success = false, Message = $"Todo with id {id} not found", Data = null };
             }
 
             db.Todos.Remove(existingTodo);
             db.SaveChanges();
             logger.LogInformation($"Todo with id = {id} was deleted from the database");
-            return new InternalResponse<Todo> { Success = true, Data = existingTodo };
+            return new InternalResponse<Todo> { Success = true, Data = existingTodo }; 
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, $"Error deleting todo with id {id}");
-            return new InternalResponse<Todo> { Success = false, Message = $"Error deleting todo with id {id}" };
+            logger.LogError(ex, $"ERROR AT REPOSITORY: Error deleting todo with id {id}");
+            return new InternalResponse<Todo> { Success = false, Message = $"Error deleting todo with id {id}", Data = null };
         }
     }
 }

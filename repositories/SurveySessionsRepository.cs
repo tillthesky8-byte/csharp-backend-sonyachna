@@ -19,8 +19,8 @@ public class SurveySessionsRepository : IRepository<SurveySession>
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error fetching all survey sessions");
-            return new InternalResponse<List<SurveySession>> { Success = false, Message = "Error fetching all survey sessions" };
+            logger.LogError(ex, "ERROR AT REPOSITORY: Error fetching all survey sessions");
+            return new InternalResponse<List<SurveySession>> { Success = false, Message = "Error fetching all survey sessions", Data = null };
         }
     }
 
@@ -35,8 +35,8 @@ public class SurveySessionsRepository : IRepository<SurveySession>
          catch (Exception ex)
 
          {
-             logger.LogError(ex, $"Error fetching survey session with id {id}");
-             return new InternalResponse<SurveySession> { Success = false, Message = $"Error fetching survey session with id {id}" };
+             logger.LogError(ex, $"ERROR AT REPOSITORY: Error fetching survey session with id {id}");
+             return new InternalResponse<SurveySession> { Success = false, Message = $"Error fetching survey session with id {id}", Data = null };
          }
     } 
 
@@ -51,8 +51,8 @@ public class SurveySessionsRepository : IRepository<SurveySession>
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error adding new survey session");
-            return new InternalResponse<SurveySession> { Success = false, Message = "Error adding new survey session" };
+            logger.LogError(ex, "ERROR AT REPOSITORY: Error adding new survey session");
+            return new InternalResponse<SurveySession> { Success = false, Message = "Error adding new survey session", Data = null };
         }
     }
 
@@ -64,7 +64,7 @@ public class SurveySessionsRepository : IRepository<SurveySession>
             if (existingSession == null)
             {
                 logger.LogWarning($"Survey session with id = {entity.Id} not found for update");
-                return new InternalResponse<SurveySession> { Success = false, Message = "Survey session not found" };
+                return new InternalResponse<SurveySession> { Success = false, Message = "Survey session not found", Data = null };
             }
             existingSession.Date = entity.Date;
             existingSession.CreatedAt = entity.CreatedAt;
@@ -74,8 +74,8 @@ public class SurveySessionsRepository : IRepository<SurveySession>
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, $"Error updating survey session with id {entity.Id}");
-            return new InternalResponse<SurveySession> { Success = false, Message = $"Error updating survey session with id {entity.Id}" };
+            logger.LogError(ex, $"ERROR AT REPOSITORY: Error updating survey session with id {entity.Id}");
+            return new InternalResponse<SurveySession> { Success = false, Message = $"Error updating survey session with id {entity.Id}", Data = null };
         }
     }
 
@@ -87,7 +87,7 @@ public class SurveySessionsRepository : IRepository<SurveySession>
             if (session == null)
             {
                 logger.LogWarning($"Survey session with id = {id} not found for deletion");
-                return new InternalResponse<SurveySession> { Success = false, Message = "Survey session not found" };
+                return new InternalResponse<SurveySession> { Success = false, Message = "Survey session not found", Data = null };
             }
             db.SurveySessions.Remove(session);
             db.SaveChanges();
@@ -96,8 +96,8 @@ public class SurveySessionsRepository : IRepository<SurveySession>
         }
          catch (Exception ex)
          {
-             logger.LogError(ex, $"Error deleting survey session with id {id}");
-             return new InternalResponse<SurveySession> { Success = false, Message = $"Error deleting survey session with id {id}" };
+             logger.LogError(ex, $"ERROR AT REPOSITORY: Error deleting survey session with id {id}");
+             return new InternalResponse<SurveySession> { Success = false, Message = $"Error deleting survey session with id {id}", Data = null };
          }
     }
 

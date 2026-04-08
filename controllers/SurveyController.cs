@@ -27,7 +27,7 @@ public class SurveyController : ControllerBase
         var serviceResponse = service.SubmitSurvey(answers);
         if (serviceResponse.Success)
         {
-            logger.LogInformation("Survey submitted successfully");
+            logger.LogInformation("CREATED");
             return Ok(new DTOs.CreateSurveyResponse { Success = true, Message = "Survey submitted successfully" });
         }
         else

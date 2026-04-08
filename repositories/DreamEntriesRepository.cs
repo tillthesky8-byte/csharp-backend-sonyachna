@@ -20,7 +20,7 @@ public class DreamEntriesRepository : IRepository<DreamEntry>
         catch (Exception ex)
         {
             logger.LogError(ex, "Error fetching all dream entries");
-            return new InternalResponse<List<DreamEntry>> { Success = false, Message = "Error fetching all dream entries" };
+            return new InternalResponse<List<DreamEntry>> { Success = false, Message = "Error fetching all dream entries", Data = null };
         }
     }
     public InternalResponse<DreamEntry> GetById(int id)
@@ -34,7 +34,7 @@ public class DreamEntriesRepository : IRepository<DreamEntry>
          catch (Exception ex)         
          {
             logger.LogError(ex, $"Error fetching dream entry with id {id}");
-            return new InternalResponse<DreamEntry> { Success = false, Message = $"Error fetching dream entry with id {id}" };
+            return new InternalResponse<DreamEntry> { Success = false, Message = $"Error fetching dream entry with id {id}", Data = null };
          }
     }
 
@@ -50,7 +50,7 @@ public class DreamEntriesRepository : IRepository<DreamEntry>
         catch (Exception ex)
         {
             logger.LogError(ex, "Error adding new dream entry");
-            return new InternalResponse<DreamEntry> { Success = false, Message = "Error adding new dream entry" };
+            return new InternalResponse<DreamEntry> { Success = false, Message = "Error adding new dream entry", Data = null };
         }
     }
 
@@ -73,7 +73,7 @@ public class DreamEntriesRepository : IRepository<DreamEntry>
         catch (Exception ex)
         {
             logger.LogError(ex, $"Error updating dream entry with id {entity.Id}");
-            return new InternalResponse<DreamEntry> { Success = false, Message = $"Error updating dream entry with id {entity.Id}" };
+            return new InternalResponse<DreamEntry> { Success = false, Message = $"Error updating dream entry with id {entity.Id}", Data = null };
         }
     }
 
@@ -85,7 +85,7 @@ public class DreamEntriesRepository : IRepository<DreamEntry>
             if (existingDreamEntry == null)
             {
                 logger.LogWarning($"Dream entry with id = {id} was not found for deletion");
-                return new InternalResponse<DreamEntry> { Success = false, Message = $"Dream entry with id {id} not found for deletion" };
+                return new InternalResponse<DreamEntry> { Success = false, Message = $"Dream entry with id {id} not found for deletion", Data = null };
             }
             db.DreamEntries.Remove(existingDreamEntry);
             db.SaveChanges();
@@ -95,7 +95,7 @@ public class DreamEntriesRepository : IRepository<DreamEntry>
         catch (Exception ex)
         {
             logger.LogError(ex, $"Error deleting dream entry with id {id}");
-            return new InternalResponse<DreamEntry> { Success = false, Message = $"Error deleting dream entry with id {id}" };
+            return new InternalResponse<DreamEntry> { Success = false, Message = $"Error deleting dream entry with id {id}", Data = null };
         }
     }
 }
