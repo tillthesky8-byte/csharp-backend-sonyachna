@@ -41,14 +41,14 @@ public class SurveyController : ControllerBase
     // Endpoint for submitting a survey.
     // Add more validations (detailes in version 1.2 description)
 
-    [HttpPost("check-existence")]
-    public IActionResult CheckSurveyExistence(DTOs.CheckSurveyExistenceRequest request)
+    [HttpPost("check-existence/{date}")]
+    public IActionResult CheckSurveyExistence([FromRoute] DateOnly date)
     {
-        var serviceResponse = service.SurveyExistsForDate(request.Date);
-        logger.LogInformation($"Survey existence check for date {request.Date}: {serviceResponse.Data}");
+        var serviceResponse = service.SurveyExistsForDate(date);
+        logger.LogInformation($"Survey existence check for date {date}: {serviceResponse.Data}");
         return Ok(new DTOs.CheckSurveyExistenceResponse { Exists = serviceResponse.Data });
     }
-    // curl -X POST "http://localhost:5155/api/survey/check-existence" -H "Content-Type: application/json" -d '{"date":"2024-06-01"}'
+    // curl -X POST "http://localhost:5155/api/survey/check-existence/2024-06-01" -H "Content-Type: application/json"
     // Endpoint for checking if a survey exists for a specific date.
 
 }

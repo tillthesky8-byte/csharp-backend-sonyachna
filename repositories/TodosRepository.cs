@@ -70,7 +70,7 @@ public class TododsRepository : IRepository<Todo>
             existingTodo.Status = entity.Status;
             existingTodo.Status = entity.Status;
             existingTodo.DueAt = entity.DueAt;
-            existingTodo.UpdatedAt = DateTime.UtcNow;
+            existingTodo.UpdatedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             existingTodo.CompletedAt = entity.CompletedAt;
 
             db.SaveChanges();

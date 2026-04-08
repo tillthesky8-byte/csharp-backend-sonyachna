@@ -1,9 +1,6 @@
 namespace DTOs
 {
-    public class CheckSurveyExistenceRequest
-    {
-        public DateOnly Date { get; set; }
-    }
+    //request is handled by route parameter
 
     public class CheckSurveyExistenceResponse
     {

@@ -10,7 +10,7 @@ namespace DTOs
     public class CreateDreamEntryResponse
     {
         public int DreamEntryId { get; set; }
-        public DateTime CreationDate { get; set; }
+        public long CreationDate { get; set; }
     }
 
     // put operations

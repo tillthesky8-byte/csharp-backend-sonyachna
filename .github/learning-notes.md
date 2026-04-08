@@ -37,6 +37,10 @@
 - Decide how related data behaves on delete (`Cascade`, `Restrict`, or soft delete).
 - Write this into EF Core configuration so behavior is predictable.
 
+### 8) Define endpoints before coding DTOs
+- This prevents over-engineering DTOs and keeps them focused on actual API needs.
+- It also helps avoid redundant fields (like `TodoId` in update requests when the ID is in the route).
+
 ## Session Notes Template
 
 ### YYYY-MM-DD - Session Title

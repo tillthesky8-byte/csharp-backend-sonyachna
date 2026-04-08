@@ -42,13 +42,13 @@ public class TodosController : ControllerBase
             Description = request.Description,
             Scope = request.Scope,
             DueAt = request.DueAt,
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
             Status = TodoStatus.InProgress
         };
         var repoResponse = repo.Add(newTodo);
         if (repoResponse.Success)        {
             logger.LogInformation($"Todo with id = {repoResponse.Data!.Id} was successfully created");
-            return Ok(new CreateTodoResponse { Success = true, Message = "Todo created successfully", TodoId = repoResponse.Data.Id });
+            return Ok(new CreateTodoResponse { Success = true, Message = "Todo created successfully"});
         }
         logger.LogError("Failed to create todo");
         return BadRequest(new CreateTodoResponse { Success = false, Message = "Failed to create todo" });

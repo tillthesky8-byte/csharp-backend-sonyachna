@@ -42,7 +42,11 @@ public class SurveyService
         try
         {
             //block where an error occurs.
-            var repoResponse = repo.Add(new SurveySession { Date = DateOnly.FromDateTime(DateTime.UtcNow) });
+            var repoResponse = repo.Add(new SurveySession
+            {
+                Date = DateOnly.FromDateTime(DateTime.UtcNow),
+                CreatedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+            });
             if (!repoResponse.Success)
             {
                 logger.LogError("Failed to create survey session: {Message}", repoResponse.Message);

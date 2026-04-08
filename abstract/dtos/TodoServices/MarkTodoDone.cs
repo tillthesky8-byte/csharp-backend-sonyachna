@@ -1,9 +1,6 @@
 namespace DTOs
 {
-    public class MarkTodoDoneRequest
-    {
-        public int TodoId { get; set; }
-    }
+    //request is handled by route parameter
 
     public class MarkTodoDoneResponse
     {
