@@ -12,3 +12,16 @@ public enum TodoScope
     MiddleTerm = 1,
     LongTerm = 2
 }
+
+public class InternalResponse
+{
+    public bool Success { get; set; }
+    public string? Message { get; set; }
+}
+
+public class InternalResponse<T>
+{
+    public bool Success { get; set; }
+    public string? Message { get; set; }
+    public T? Data { get; set; }
+}

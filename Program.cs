@@ -22,7 +22,13 @@ builder.Services.AddScoped<IRepository<Answer>, AnswerRepository>();
 builder.Services.AddScoped<IRepository<DreamEntry>, DreamEntriesRepository>();
 builder.Services.AddScoped<IRepository<Todo>, TododsRepository>(); // typo in repository name is intentional to match the class name. Future reminder to fix
 
+
+//swagger configuration
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 var app = builder.Build();
 app.MapControllers();
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.Run();

@@ -1,4 +1,3 @@
-using System.Security.Cryptography.X509Certificates;
 
 public class TodoService
 {
@@ -11,7 +10,7 @@ public class TodoService
         this.logger = logger;
     }
 
-    public bool MarkTodoCompleted(int todoId)
+    public InternalResponse<bool> MarkTodoCompleted(int todoId)
     {
         try
         {
@@ -19,14 +18,14 @@ public class TodoService
             if (!getResponse.Success || getResponse.Data == null)
             {
                 logger.LogWarning($"Todo with id {todoId} not found");
-                return false;
+                return new InternalResponse<bool> { Success = false, Message = "Todo not found" };
             }
 
             var todo = getResponse.Data;
             if (todo.Status == TodoStatus.Completed)
             {
                 logger.LogInformation($"Todo with id {todoId} is already marked as completed");
-                return true;
+                return new InternalResponse<bool> { Success = true, Message = "Todo is already completed" };
             }
 
             todo.Status = TodoStatus.Completed;
@@ -34,20 +33,20 @@ public class TodoService
             if (!updateResponse.Success)
             {
                 logger.LogError($"Failed to update todo with id {todoId}: {updateResponse.Message}");
-                return false;
+                return new InternalResponse<bool> { Success = false, Message = "Failed to update todo" };
             }
 
             logger.LogInformation($"Todo with id {todoId} was marked as completed");
-            return true;
+            return new InternalResponse<bool> { Success = true, Message = "Todo marked as completed successfully" };
         }
         catch (Exception ex)
         {
             logger.LogError(ex, $"Error marking todo with id {todoId} as completed");
-            return false;
+            return new InternalResponse<bool> { Success = false, Message = "Error marking todo as completed" };
         }
 
     }
-    public bool MarkTodoFailed(int todoId)
+    public InternalResponse<bool> MarkTodoFailed(int todoId)
     {
         try
         {
@@ -55,14 +54,14 @@ public class TodoService
             if (!getResponse.Success || getResponse.Data == null)
             {
                 logger.LogWarning($"Todo with id {todoId} not found");
-                return false;
+                return new InternalResponse<bool> { Success = false, Message = "Todo not found" };
             }
 
             var todo = getResponse.Data;
             if (todo.Status == TodoStatus.Failed)
             {
                 logger.LogInformation($"Todo with id {todoId} is already marked as failed");
-                return true; 
+                return new InternalResponse<bool> { Success = true, Message = "Todo is already failed" };
             }
 
             todo.Status = TodoStatus.Failed;
@@ -70,16 +69,16 @@ public class TodoService
             if (!updateResponse.Success)
             {
                 logger.LogError($"Failed to update todo with id {todoId}: {updateResponse.Message}");
-                return false;
+                return new InternalResponse<bool> { Success = false, Message = "Failed to update todo" };
             }
 
             logger.LogInformation($"Todo with id {todoId} was marked as failed");
-            return true;
+            return new InternalResponse<bool> { Success = true, Message = "Todo marked as failed successfully" };
         }
         catch (Exception ex)
         {
             logger.LogError(ex, $"Error marking todo with id {todoId} as failed");
-            return false;
+            return new InternalResponse<bool> { Success = false, Message = "Error marking todo as failed" };
         }
     }
 }   

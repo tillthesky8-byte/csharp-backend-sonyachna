@@ -9,53 +9,53 @@ public class QuestionsRepository : IRepository<Question>
         this.logger = logger;
     }
 
-    public RespositoryResponse<List<Question>> GetAll()
+    public InternalResponse<List<Question>> GetAll()
     {
         try
         {
             var questions = db.Questions.ToList();
             logger.LogInformation($"All questions were retrived from the database; count: {questions.Count}");
-            return new RespositoryResponse<List<Question>> { Success = true, Data = questions };
+            return new InternalResponse<List<Question>> { Success = true, Data = questions };
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error fetching all questions");
-            return new RespositoryResponse<List<Question>> { Success = false, Message = "Error fetching all questions" };
+            return new InternalResponse<List<Question>> { Success = false, Message = "Error fetching all questions" };
         }
     }
 
-    public RespositoryResponse<Question> GetById(int id)
+    public InternalResponse<Question> GetById(int id)
     {
         try
         {
             var question = db.Questions.FirstOrDefault(q => q.Id == id);
             logger.LogInformation($"Question with id = {id} was retrived from the database");
-            return new RespositoryResponse<Question> { Success = true, Data = question };
+            return new InternalResponse<Question> { Success = true, Data = question };
         }
         catch (Exception ex)
         {
             logger.LogError(ex, $"Error fetching question with id {id}");
-            return new RespositoryResponse<Question> { Success = false, Message = $"Error fetching question with id {id}" };
+            return new InternalResponse<Question> { Success = false, Message = $"Error fetching question with id {id}" };
         }
     }
 
-    public RespositoryResponse<Question> Add(Question entity)
+    public InternalResponse<Question> Add(Question entity)
     {
         try
         {
             db.Questions.Add(entity);
             db.SaveChanges();
             logger.LogInformation($"Question with id = {entity.Id} was added to the database");
-            return new RespositoryResponse<Question> { Success = true, Data = entity };
+            return new InternalResponse<Question> { Success = true, Data = entity };
         }
         catch (Exception ex)
         {
             logger.LogError(ex, $"Error adding question with id {entity.Id}");
-            return new RespositoryResponse<Question> { Success = false, Message = $"Error adding question with id {entity.Id}" };
+            return new InternalResponse<Question> { Success = false, Message = $"Error adding question with id {entity.Id}" };
         }
     }
 
-    public RespositoryResponse<Question> Update(Question entity)
+    public InternalResponse<Question> Update(Question entity)
     {
         try
         {
@@ -63,23 +63,23 @@ public class QuestionsRepository : IRepository<Question>
             if (existingQuestion == null)
             {
                 logger.LogWarning($"Question with id = {entity.Id} not found for update");
-                return new RespositoryResponse<Question> { Success = false, Message = $"Question with id {entity.Id} not found" };
+                return new InternalResponse<Question> { Success = false, Message = $"Question with id {entity.Id} not found" };
             }
 
             existingQuestion.Code = entity.Code;
             existingQuestion.Text = entity.Text;
             db.SaveChanges();
             logger.LogInformation($"Question with id = {entity.Id} was updated in the database");
-            return new RespositoryResponse<Question> { Success = true, Data = existingQuestion };
+            return new InternalResponse<Question> { Success = true, Data = existingQuestion };
         }
         catch (Exception ex)
         {
             logger.LogError(ex, $"Error updating question with id {entity.Id}");
-            return new RespositoryResponse<Question> { Success = false, Message = $"Error updating question with id {entity.Id}" };
+            return new InternalResponse<Question> { Success = false, Message = $"Error updating question with id {entity.Id}" };
         }
     }
 
-    public RespositoryResponse<Question> Delete(int id)
+    public InternalResponse<Question> Delete(int id)
     {
         try
         {
@@ -87,18 +87,18 @@ public class QuestionsRepository : IRepository<Question>
             if (existingQuestion == null)
             {
                 logger.LogWarning($"Question with id = {id} not found for deletion");
-                return new RespositoryResponse<Question> { Success = false, Message = $"Question with id {id} not found" };
+                return new InternalResponse<Question> { Success = false, Message = $"Question with id {id} not found" };
             }
 
             db.Questions.Remove(existingQuestion);
             db.SaveChanges();
             logger.LogInformation($"Question with id = {id} was deleted from the database");
-            return new RespositoryResponse<Question> { Success = true, Data = existingQuestion };
+            return new InternalResponse<Question> { Success = true, Data = existingQuestion };
         }
         catch (Exception ex)
         {
             logger.LogError(ex, $"Error deleting question with id {id}");
-            return new RespositoryResponse<Question> { Success = false, Message = $"Error deleting question with id {id}" };
+            return new InternalResponse<Question> { Success = false, Message = $"Error deleting question with id {id}" };
         }
     }
 }

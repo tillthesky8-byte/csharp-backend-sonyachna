@@ -10,60 +10,60 @@ public class AnswerRepository : IRepository<Answer>
         this.logger = logger;   
     }
 
-    public RespositoryResponse<List<Answer>> GetAll()
+    public InternalResponse<List<Answer>> GetAll()
     {
         try
         {
             var answers = db.Answers.ToList();
             logger.LogInformation($"All answers were retrived from the database; count: {answers.Count}");
-            return new RespositoryResponse<List<Answer>> { Success = true, Data = answers };
+            return new InternalResponse<List<Answer>> { Success = true, Data = answers };
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error fetching all answers");
-            return new RespositoryResponse<List<Answer>> { Success = false, Message = "Error fetching all answers" };
+            return new InternalResponse<List<Answer>> { Success = false, Message = "Error fetching all answers" };
         }   
     }
 
-    public RespositoryResponse<Answer> GetById(int id)
+    public InternalResponse<Answer> GetById(int id)
     {
        try
         {
             var answer = db.Answers.FirstOrDefault(a => a.Id == id);
             logger.LogInformation($"Answer with id = {id} was retrived from the database");
-            return new RespositoryResponse<Answer> { Success = true, Data = answer };
+            return new InternalResponse<Answer> { Success = true, Data = answer };
         }
         catch (Exception ex)
         {
             logger.LogError(ex, $"Error fetching answer with id {id}");
-            return new RespositoryResponse<Answer> { Success = false, Message = $"Error fetching answer with id {id}" };
+            return new InternalResponse<Answer> { Success = false, Message = $"Error fetching answer with id {id}" };
         }
     }
 
-    public RespositoryResponse<Answer> Add(Answer entity)
+    public InternalResponse<Answer> Add(Answer entity)
     {
         try
         {
             db.Answers.Add(entity);
             db.SaveChanges();
             logger.LogInformation($"Answer with id = {entity.Id} was added to the database");
-            return new RespositoryResponse<Answer> { Success = true, Data = entity };
+            return new InternalResponse<Answer> { Success = true, Data = entity };
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error adding new answer");
-            return new RespositoryResponse<Answer> { Success = false, Message = "Error adding new answer" };
+            return new InternalResponse<Answer> { Success = false, Message = "Error adding new answer" };
         }
     }
 
-    public RespositoryResponse<Answer> Update(Answer entity)
+    public InternalResponse<Answer> Update(Answer entity)
     {
         try
         {
             var existingAnswer = db.Answers.FirstOrDefault(a => a.Id == entity.Id);
             if (existingAnswer == null)
             {
-                return new RespositoryResponse<Answer> { Success = false, Message = "Answer not found"};
+                return new InternalResponse<Answer> { Success = false, Message = "Answer not found"};
             }
             else
             {
@@ -71,35 +71,35 @@ public class AnswerRepository : IRepository<Answer>
                 existingAnswer.Remark = entity.Remark;
                 db.SaveChanges();
                 logger.LogInformation($"The answer with id = {existingAnswer.Id} is updated succesfully");
-                return new RespositoryResponse<Answer> { Success = true, Data = existingAnswer };
+                return new InternalResponse<Answer> { Success = true, Data = existingAnswer };
             }
         }
         catch (Exception ex)
         {
             logger.LogError(ex, $"Error updating answer with id {entity.Id}");
-            return new RespositoryResponse<Answer> { Success = false, Message = $"Error updating answer with id {entity.Id}" };
+            return new InternalResponse<Answer> { Success = false, Message = $"Error updating answer with id {entity.Id}" };
         }
     }
 
-    public RespositoryResponse<Answer> Delete(int id)
+    public InternalResponse<Answer> Delete(int id)
     {
         try
         {
             var answer = db.Answers.FirstOrDefault(a => a.Id == id);
             if (answer == null)
             {
-                return new RespositoryResponse<Answer> { Success = false, Message = "Answer not found" };
+                return new InternalResponse<Answer> { Success = false, Message = "Answer not found" };
             }
             db.Answers.Remove(answer);
             db.SaveChanges();
             logger.LogInformation($"The answer with id = {id} is deleted succesfully");
-            return new RespositoryResponse<Answer> { Success = true, Data = answer };
+            return new InternalResponse<Answer> { Success = true, Data = answer };
             
         }
         catch (Exception ex)
         {
             logger.LogError(ex, $"Error deleting answer with id {id}");
-            return new RespositoryResponse<Answer> { Success = false, Message = $"Error deleting answer with id {id}" };
+            return new InternalResponse<Answer> { Success = false, Message = $"Error deleting answer with id {id}" };
         }
     }
 }

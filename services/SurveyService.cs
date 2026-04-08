@@ -14,41 +14,41 @@ public class SurveyService
         this.logger = logger;
     }
 
-    public bool SurveyExistsForDate(DateOnly date)
+    public InternalResponse<bool> SurveyExistsForDate(DateOnly date)
     {
         try
         {
-            var allSessionsResponse = repo.GetAll();
-            if (!allSessionsResponse.Success)
+            var repoResponse = repo.GetAll();
+            if (!repoResponse.Success)
             {
-                logger.LogError("Failed to retrieve survey sessions: {Message}", allSessionsResponse.Message);
-                return false;
+                logger.LogError("Failed to retrieve survey sessions: {Message}", repoResponse.Message);
+                return new InternalResponse<bool> { Success = false };
             }
 
-            var sessions = allSessionsResponse.Data;
+            var sessions = repoResponse.Data;
             var exists = sessions!.Any(s => s.Date == date);
             logger.LogInformation($"Survey session existence check for date {date}: {exists}");
-            return exists;
+            return new InternalResponse<bool> { Success = true, Data = exists };
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error checking survey session existence for date");
-            return false;
+            return new InternalResponse<bool> { Success = false };
         }
     }
 
-    public bool SubmitSurvey(List<Answer> answers)
+    public InternalResponse SubmitSurvey(List<Answer> answers)
     {
         try
         {
             //block where an error occurs.
-            var createSessionResponse = repo.Add(new SurveySession { Date = DateOnly.FromDateTime(DateTime.UtcNow) });
-            if (!createSessionResponse.Success)
+            var repoResponse = repo.Add(new SurveySession { Date = DateOnly.FromDateTime(DateTime.UtcNow) });
+            if (!repoResponse.Success)
             {
-                logger.LogError("Failed to create survey session: {Message}", createSessionResponse.Message);
-                return false;
+                logger.LogError("Failed to create survey session: {Message}", repoResponse.Message);
+                return new InternalResponse { Success = false };
             }
-            var session = createSessionResponse.Data;
+            var session = repoResponse.Data;
             foreach (var answer in answers)
             {
                 // probably passed in the request answer model doesn't match the actual model
@@ -68,10 +68,10 @@ public class SurveyService
         catch (Exception ex)
         {
             logger.LogError(ex, "An error occurred while submitting the survey");
-            return false;
+            return new InternalResponse { Success = false };
         }
 
-        return true;
+        return new InternalResponse { Success = true };
 
     }
 }

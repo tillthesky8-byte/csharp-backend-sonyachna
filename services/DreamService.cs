@@ -12,7 +12,7 @@ public class DreamService
         this.logger = logger;
     }
 
-    public List<DreamEntry> RetriveDreamEntriesByDate(DateOnly date)
+    public InternalResponse<List<DreamEntry>> RetriveDreamEntriesByDate(DateOnly date)
     {
         try
         {
@@ -20,18 +20,18 @@ public class DreamService
             if (!allEntriesResponse.Success)
             {
                 logger.LogError("Failed to retrieve dream entries: {Message}", allEntriesResponse.Message);
-                return new List<DreamEntry>();
+                return new InternalResponse<List<DreamEntry>> { Success = false };
             }
 
             var entries = allEntriesResponse.Data;
             var filteredEntries = entries!.Where(e => e.Date == date).ToList();
             logger.LogInformation($"Retrieved {filteredEntries.Count} dream entries for date {date}");
-            return filteredEntries;
+            return new InternalResponse<List<DreamEntry>> { Success = true, Data = filteredEntries };
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error retrieving dream entries by date");
-            return new List<DreamEntry>();
+            return new InternalResponse<List<DreamEntry>> { Success = false };
         }
     }
 }
