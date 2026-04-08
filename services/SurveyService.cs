@@ -1,15 +1,15 @@
 public class SurveyService
 {
-    private readonly IRepository<SurveySession> surveySessionRepository;
+    private readonly IRepository<SurveySession> repo;
     private readonly AppDbContext db;
     private readonly ILogger<SurveyService> logger;
 
     public SurveyService(
-        IRepository<SurveySession> surveySessionRepository,
+        IRepository<SurveySession> repo,
         AppDbContext db,
         ILogger<SurveyService> logger)
     {
-        this.surveySessionRepository = surveySessionRepository;
+        this.repo = repo;
         this.db = db;
         this.logger = logger;
     }
@@ -18,7 +18,7 @@ public class SurveyService
     {
         try
         {
-            var allSessionsResponse = surveySessionRepository.GetAll();
+            var allSessionsResponse = repo.GetAll();
             if (!allSessionsResponse.Success)
             {
                 logger.LogError("Failed to retrieve survey sessions: {Message}", allSessionsResponse.Message);
@@ -41,7 +41,8 @@ public class SurveyService
     {
         try
         {
-            var createSessionResponse = surveySessionRepository.Add(new SurveySession { Date = DateOnly.FromDateTime(DateTime.UtcNow) });
+            //block where an error occurs.
+            var createSessionResponse = repo.Add(new SurveySession { Date = DateOnly.FromDateTime(DateTime.UtcNow) });
             if (!createSessionResponse.Success)
             {
                 logger.LogError("Failed to create survey session: {Message}", createSessionResponse.Message);
@@ -50,8 +51,16 @@ public class SurveyService
             var session = createSessionResponse.Data;
             foreach (var answer in answers)
             {
-                answer.SurveySessionId = session!.Id;
-                db.Answers.Add(answer);
+                // probably passed in the request answer model doesn't match the actual model
+                // maybe i try to submit an answer without questionid which corresponds to the real questionid in the database, which causes a foreign key error. need to check the model and the request body.
+                var answerEntity = new Answer
+                {
+                    QuestionId = answer.QuestionId,
+                    SurveySessionId = session!.Id,
+                    Response = answer.Response,
+                    Remark = answer.Remark
+                };
+                db.Answers.Add(answerEntity);
             }
             db.SaveChanges();
             logger.LogInformation($"Survey session with id = {session!.Id} was created and {answers.Count} answers were added to the database");

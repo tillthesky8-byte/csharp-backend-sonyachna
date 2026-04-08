@@ -1,3 +1,5 @@
+//Typo in the file name, should be "AnswerRepository.cs" instead of "AnswersRepositry.cs". Future reminder to fix the file name.
+//Inacuracy in the class name, should be "AnswerRepository" instead of "AnswersRepository". Future reminder to fix the class name.
 public class AnswerRepository : IRepository<Answer>
 {
     private readonly AppDbContext db;

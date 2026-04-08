@@ -1,6 +1,12 @@
 using DTOs;
 using Microsoft.AspNetCore.Mvc;
 
+
+// the controller is working fine, but further improvements can be made such as:
+// 1. Validation of request bodies (e.g., check for null or invalid values)
+// 2. More specific error messages in case of failures (e.g., distinguish between not found and database errors)
+// 3. Consider using async/await for better scalability if the repository methods support it
+// 4. Remove redundant todoId from the request body in update and patch endpoints, as the id is already provided in the route
 [ApiController]
 [Route("api/[controller]")]
 public class TodosController : ControllerBase
@@ -49,11 +55,17 @@ public class TodosController : ControllerBase
         return BadRequest(new CreateTodoResponse { Success = false, Message = "Failed to create todo" });
     }
 
+    /* Notes:
+    1. Redundant todoId,
+    2. Zero id problem, (Fixed)
+    3. Should check whether an update is actually needed.
+    */
     [HttpPut("{id}")]
     public IActionResult UpdateTodo(UpdateTodoRequest request)
     {
         var updateTodo = new Todo
         {
+            Id = request.TodoId,
             Description = request.Description,
             Scope = (TodoScope)request.Scope!,
             Status = (TodoStatus)request.Status!,
@@ -69,6 +81,10 @@ public class TodosController : ControllerBase
 
     }
 
+    /* Notes:
+        1. Redundant todoId,
+        2. Marking an already completed todo returns success.
+    */
     [HttpPatch("{id}")]
     public IActionResult MarkTodoAsCompleted(MarkTodoDoneRequest request)
     {
@@ -82,6 +98,11 @@ public class TodosController : ControllerBase
         return BadRequest(new MarkTodoDoneResponse { Success = false, Message = $"Failed to mark todo with id {request.TodoId} as completed" });
     }
 
+    /* Notes:
+        1. Redundant todoId,
+        2. Marking an already failed todo returns success.
+    */
+    [HttpPatch("{id}/mark-failed")]
     public IActionResult MarkTodoAsFailed(MarkTodoFailedRequest request)
     {
         var result = service.MarkTodoFailed(request.TodoId);
@@ -93,3 +114,17 @@ public class TodosController : ControllerBase
         return BadRequest(new MarkTodoFailedResponse { Success = false, Message = $"Failed to mark todo with id {request.TodoId} as failed" });
     }
 }
+
+//the curl requests to test all the endpoints of the todo controller for port 5155.
+/*
+1. Get all todos:
+curl -X GET "http://localhost:5155/api/todos" //works
+2. Add a new todo:
+curl -X POST "http://localhost:5155/api/todos" -H "Content-Type: application/json" -d '{"description":"Finish the project","scope":1,"dueAt":"2024-06-30T23:59:59Z"}' // works
+3. Update an existing todo (replace {id} with the actual todo id):
+curl -X PUT "http://localhost:5155/api/todos/{id}" -H "Content-Type: application/json" -d '{"todoId":{id},"description":"Finish the project with updates","scope":2,"status":1,"dueAt":"2024-07-15T23:59:59Z"}' // zero id problem, redundant todoId in body, needs fixing
+4. Mark a todo as completed (replace {id} with the actual todo id):
+curl -X PATCH "http://localhost:5155/api/todos/{id}" -H "Content-Type: application/json" -d '{"todoId":{id}}' // redundant todoId in body, needs fixing // completing an already completed todo returns success, needs fixing in service layer (should return false if the todo is already completed or failed)
+5. Mark a todo as failed (replace {id} with the actual todo id):
+curl -X PATCH "http://localhost:5155/api/todos/{id}/mark-failed" -H "Content-Type: application/json" -d '{"todoId":{id}}' // redundant todoId in body, needs fixing // also marking an already failed todo as failed again returns success, needs fixing in service layer (should return false if the todo is already completed or failed)
+*/  

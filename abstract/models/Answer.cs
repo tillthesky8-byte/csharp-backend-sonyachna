@@ -6,7 +6,7 @@ public class Answer
     public string? Response { get; set; }
     public string? Remark { get; set; }
 
-    //navigation properties
+//navigation properties
     public Question? Question { get; set; }
     public SurveySession? SurveySession { get; set; }
 }
